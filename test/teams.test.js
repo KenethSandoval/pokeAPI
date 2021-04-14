@@ -1,9 +1,22 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const userController = require('../controllers/user');
+const teamController = require('../controllers/teams');
 
 chai.use(chaiHttp);
 
 const app = require('../app').app;
+
+before((done) => {
+  userController.registerUser('keneth', '1234');
+  userController.registerUser('eunice', '4321');
+  done();
+});
+
+afterEach((done) => {
+  teamController.clearUpTeam();
+  done();
+});
 
 describe('Suite de prueba teams', () => {
   it('should return the team of the given user', (done) => {
@@ -18,9 +31,7 @@ describe('Suite de prueba teams', () => {
         chai.assert.equal(res.statusCode, 200);
         chai.request(app)
          .put('/teams')
-         .send({
-           team: team
-         })
+         .send({team: team})
          .set('Authorization', `JWT ${token}`)
          .end((err, res) => {
           chai.request(app)
@@ -45,7 +56,7 @@ describe('Suite de prueba teams', () => {
     chai.request(app)
       .post('/auth/login')
       .set('content-type', 'application/json')
-      .send({user: 'keneth', password: '1234'})
+      .send({user: 'eunice', password: '4321'})
       .end((err, res) => {
         let token = res.body.token;
         chai.assert.equal(res.statusCode, 200);
@@ -59,7 +70,7 @@ describe('Suite de prueba teams', () => {
               .set('Authorization', `JWT ${token}`)
               .end((err, res) => {
                 chai.assert.equal(res.statusCode, 200);
-                chai.assert.equal(res.body.trainer, 'keneth');
+                chai.assert.equal(res.body.trainer, 'eunice');
                 chai.assert.equal(res.body.team.length, 1);
                 chai.assert.equal(res.body.team[0].name, pokeName);
                 chai.assert.equal(res.body.team[0].pokedexNumber, 1);
@@ -68,4 +79,45 @@ describe('Suite de prueba teams', () => {
           });
       });
   });
+
+  it('should remove the pokemon at index', (done) => {
+    let team = [{name: 'Charizard'}, {name: 'Blastoise'}, {name: 'Keneth'}];
+    
+    chai.request(app)
+      .post('/auth/login')
+      .set('content-type', 'application/json')
+      .send({user: 'eunice', password: '4321'})
+      .end((err, res) => {
+        let token = res.body.token;
+        chai.assert.equal(res.statusCode, 200);
+        chai.request(app)
+          .put('/teams')
+          .send({team: team})
+          .set('Authorization', `JWT ${token}`)
+          .end((err, res) => {
+            chai.request(app)
+              .delete('/teams/pokemons/1')
+              .set('Authorization', `JWT ${token}`)
+              .end((err, res) => {
+                chai.assert.equal(res.statusCode, 200);
+                chai.request(app)
+                  .get('/teams')
+                  .set('Authorization', `JWT ${token}`)
+                  .end((err, res) => {
+                     chai.assert.equal(res.statusCode, 200);
+                     chai.assert.equal(res.body.trainer, 'eunice');
+                     chai.assert.equal(res.body.team.length, team.length - 1);
+                     done();
+                 });
+             });
+          });
+       });
+    });
 });
+
+after((done) => {
+  userController.clearUpUser();
+  done();
+});
+
+

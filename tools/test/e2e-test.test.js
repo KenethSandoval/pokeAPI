@@ -4,7 +4,7 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 //necesitamos tener acceso a nuestro servidor para testearlo
-const app = require('../app').app;
+const app = require('../../app').app;
 
 describe('Suite de prueba 2e2', () => {
   it('should return hello world', (done) => {

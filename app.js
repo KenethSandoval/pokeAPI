@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 
-const authRouter = require('./routers/auth').router;
-const teamsRouter = require('./routers/teams').router;
+const authRouter = require('./auth/auth.route').router;
+const teamsRouter = require('./teams/teams.router').router;
 
 const port = 3000;
 

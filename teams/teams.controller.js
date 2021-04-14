@@ -18,7 +18,6 @@ const removePokemon = (userId, index) => {
   if (teamsDatabase[userId][index]) {
     teamsDatabase[userId].splice(index, 1);
   }
-  console.log(teamsDatabase);
 }
 
 const getTeamOfUser = (userId) => {

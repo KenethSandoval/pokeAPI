@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const axios = require('axios');
-require('../auth')(passport);
-const teamController = require('../controllers/teams');
-const { getUser } = require('../controllers/user');
+require('../tools/auth')(passport);
+const teamController = require('./teams.controller');
+const { getUser } = require('../auth/user.controller');
 
 router.route('/')
   .get(
@@ -13,7 +13,6 @@ router.route('/')
       let user = getUser(req.user.userId);
       let team = teamController.getTeamOfUser(req.user.userId)
 
-      console.log(team);
       res.status(200).json({
         trainer: user.userName,
         team: team
@@ -44,8 +43,6 @@ router.route('/pokemons')
         .catch(function (err) {
           console.log(err);
           res.status(400).json({message: err});
-        })
-        .then(function() {
         });
   });
 

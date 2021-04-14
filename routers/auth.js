@@ -14,13 +14,14 @@ router.route('/login')
     }
     //Comprobamos credenciales
     userController.checkUserCredentials(req.body.user, req.body.password, (err, result) => {
-      //sino son validad error
+      //sino son validas error
       if (err || !result) {
         return res.status(401).json({message: 'Invalid credentials'});
       }
      
       //si son validad generamos un JWT y lo devolvemos
-      let token = jwt.sign({userId: result}, 'secretPassword');
+      let user = userController.getUserIdFromUserName(req.body.user);
+      let token = jwt.sign({userId: user.userId}, 'secretPassword');
       res.status(200).json({token: token});
    });
 });

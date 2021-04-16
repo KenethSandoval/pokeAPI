@@ -1,14 +1,14 @@
 //punto de entrada de todo nuestro servidor
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
 
 const authRouter = require('./auth/auth.route').router;
 const teamsRouter = require('./teams/teams.router').router;
+const middlewares = require('./middlewares');
 
 const port = 3000;
 
-app.use(bodyParser.json());
+middlewares.setupMiddlewares(app);
 
 //Routes
 app.use('/auth', authRouter);

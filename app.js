@@ -5,7 +5,7 @@ const app = express();
 const authRouter = require('./auth/auth.route').router;
 const teamsRouter = require('./teams/teams.router').router;
 const middlewares = require('./middlewares');
-
+require('./database');
 const port = 3000;
 
 middlewares.setupMiddlewares(app);

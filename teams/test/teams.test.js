@@ -7,13 +7,13 @@ chai.use(chaiHttp);
 
 const app = require('../../app').app;
 
-before((done) => {
-  userController.registerUser('keneth', '1234');
-  userController.registerUser('eunice', '4321');
-  done();
+beforeEach(async () => {
+  await userController.registerUser('keneth', '1234');
+  await userController.registerUser('eunice', '4321');
 });
 
 afterEach(async () => {
+  await userController.clearUpUser();
   await teamController.clearUpTeam();
 });
 

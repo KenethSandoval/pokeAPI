@@ -41,7 +41,7 @@ describe('Suite de prueba auth', () => {
     chai.request(app)
       .post('/auth/login')
       .set('content-type', 'application/json')
-      .send({user: 'keneth', password: '1234'})
+      .send({user: 'eunice', password: '4321'})
       .end((err, res) => {
         chai.assert.equal(res.statusCode, 200);
         done();
@@ -55,6 +55,7 @@ describe('Suite de prueba auth', () => {
       .set('content-type', 'application/json')
       .send({user: 'eunice', password: '4321'})
       .end((err, res) => {
+        chai.assert.equal(res.statusCode, 200);
         chai.request(app)
         .get('/teams')
         .set('Authorization', `JWT ${res.body.token}`)
